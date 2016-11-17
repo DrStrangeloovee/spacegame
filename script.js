@@ -1,5 +1,6 @@
 /**
  * Created by marco on 17.11.16.
+ * ilija = hrn
  */
 
 var stage = new createjs.Stage("mystage");
