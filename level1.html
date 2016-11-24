@@ -7,14 +7,28 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Level 1</title>
 
-    <link  rel="https://necolas.github.io/normalize.css/5.0.0/normalize.css" type="text/css">
-    <script src="lib/easeljs-0.8.2.min.js"></script>
-    <script src="js/level1.js"></script>
-    <script src="css/style.css"></script>
-    <script src="css/style1.css"></script>
+    <link href="https://necolas.github.io/normalize.css/5.0.0/normalize.css" type="text/css" rel="stylesheet">
+    <script src="lib/easeljs-0.8.2.min.js" type="application/javascript"></script>
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+
+    <script src="js/level1.js" type="application/javascript"></script>
+    <link href="css/style1.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-<canvas id="myCanvas" width="600" height="400" style="background-color: aqua; border: solid 2px #ff0000; margin-left: 400px; margin-top: 100px"></canvas>
+<canvas id="stage" width="1200" height="700">
 
+
+
+</canvas>
+<div id="inputFields">
+    <label for="xCord">
+        X-Koordinate
+    </label>
+    <input type="text" name="xCord"><br>
+    <label for="yCord">
+        Y-Koordinate
+    </label>
+    <input type="text" name="yCord">
+</div>
 </body>
 </html>
