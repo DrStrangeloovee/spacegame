@@ -4,50 +4,58 @@
 
 /** Init the Stage and variables */
 
-//define the stage
-var stage;
-
-//define the player character
-var playerObject;
-
-//holds all the obstacles on the current level
-var obstacles = [];
+var stage, stageX, stageY, stageHeight, stageWidth, playerObject, gridContainer;
 
 function init(){
+
     stage = new createjs.Stage(document.getElementById("stage"));
-    createjs.Ticker.framerate = 30;
+    stageX = stage.x;
+    stageY = stage.y;
+    stageWidth = stage.canvas.width;
+    stageHeight = stage.canvas.height;
+
+    createjs.Ticker.setFPS(1);
     createjs.Ticker.addEventListener("tick", updateStage, false);
 
-    playerObject = new createjs.Shape();
-    //playerObject.graphics.beginFill("red").drawCircle(0, 0, 50);
-
-    playerObject.graphics.beginFill("red").drawCircle(0, 0, 25);
-
-    stage.addChild(playerObject);
+    console.log("init");
 
     //create obstacles to display
-    createObstacles();
+    //createObstacles();
+    console.log(stageX, stageY, stageWidth, stageHeight);
+
+    playerObject = new createjs.Shape();
+    playerObject.graphics.beginFill("red").drawCircle(0, 0, 25);
+    //stage.addChild(playerObject);
+
+    createGrid();
 
 
-
-    
     start();
 }
 
 //function for the start of the game and resetting
 function start() {
-
 }
 
-//moves the playerObject
-function move() {
+//Create the grid of dots on the stage
+function createGrid() {
+    var indicator = new createjs.Shape();
+    gridContainer = new createjs.Container();
 
+    indicator.graphics.drawCircle(0, 0, 5).beginFill("white");
+
+    for (var i = 0; i < stageWidth + 1; i += 100) {
+        for (var j = 0; j < stageHeight + 1; j += 100) {
+            indicator.graphics.drawCircle(i, j, 5).beginFill("white");
+            gridContainer.addChild(indicator);
+            console.log(i);
+            console.log(j);
+        }
+    }
+
+    stage.addChild(gridContainer);
 }
 
-//updating the stage
-function updateStage() {
-    stage.update();
-}
 
 //TODO
 function createObstacles() {
@@ -64,5 +72,12 @@ function createObstacles() {
 
     }
 }
+
+function updateStage() {
+    //console.log("update");
+    stage.update();
+}
+
+
 
 window.addEventListener("load", init, false);
