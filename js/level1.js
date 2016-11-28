@@ -29,7 +29,9 @@ function init() {
 
     //Drawing the stage and other background tasks
     createGrid();
+    //createPlayerObject();
     //createObstacles();
+    drawMovement();
     start();
 
     console.log("init");
@@ -41,15 +43,17 @@ function init() {
  Starts the game and redraws a clean new stage with default values
 */
 function start() {
+    console.log("start");
+    updateStage();
+}
+
+function createPlayerObject() {
     playerObjectX = 0;
     playerObjectY = stageHeight;
 
     playerObject = new createjs.Shape();
     playerObject.graphics.beginFill("red").drawCircle(playerObjectX, playerObjectY, 25);
     stage.addChild(playerObject);
-    console.log("start");
-
-    updateStage();
 }
 
 
@@ -66,8 +70,8 @@ function createGrid() {
             indicator.graphics.drawCircle(i, j, 5).beginFill("white");
             gridContainer.addChild(indicator);
 
-            console.log(i);
-            console.log(j);
+            //console.log(i);
+            //console.log(j);
         }
     }
 
@@ -120,6 +124,9 @@ function keyPressed(event) {
 Draws the indicating arrow for the movement
 */
 function drawMovement() {
+    for(var i = 0; i < gridContainer.numChildren; i++){
+        console.log("x: " + gridContainer.getChildAt(i).x + "\n y: " + gridContainer.getChildAt(i).y);
+    }
     movementArrow.graphics.lineTo();
 }
 
