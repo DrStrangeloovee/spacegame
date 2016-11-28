@@ -4,8 +4,9 @@
 
 /** Init the Stage and variables */
 
-var stage, stageX, stageY, stageHeight, stageWidth, playerObject, playerObjectX, playerObjectY, gridContainer, movementArrow;
+var stage, stageX, stageY, stageHeight, stageWidth, playerObject, playerObjectX, playerObjectY, gridContainer, gridPositions, movementArrow;
 
+gridPositions = [];
 gridContainer = new createjs.Container();
 movementArrow = new createjs.Shape();
 
@@ -31,10 +32,12 @@ function init() {
     createGrid();
     //createPlayerObject();
     //createObstacles();
-    drawMovement();
+    //drawMovement();
+    gridContainer.initialize();
     start();
 
     console.log("init");
+    console.log(gridContainer.getChildAt(1));
 
 
 
@@ -69,9 +72,11 @@ function createGrid() {
         for (var j = 0; j < stageHeight + 1; j += 100) {
             indicator.graphics.drawCircle(i, j, 5).beginFill("white");
             gridContainer.addChild(indicator);
-
             //console.log(i);
             //console.log(j);
+
+            gridPositions.push([i , j]);
+            console.log(gridPositions);
         }
     }
 
@@ -80,6 +85,7 @@ function createGrid() {
      * gridContainer.cache(stageX, stageY, stageWidth, stageHeight);
      */
     stage.addChild(gridContainer);
+    console.table(gridPositions);
 }
 
 
@@ -125,7 +131,7 @@ Draws the indicating arrow for the movement
 */
 function drawMovement() {
     for(var i = 0; i < gridContainer.numChildren; i++){
-        console.log("x: " + gridContainer.getChildAt(i).x + "\n y: " + gridContainer.getChildAt(i).y);
+        console.log("x: " + stage.getChildByName("gridContainer").getChildAt(i).x + "\n y: " + stage.getChildByName("gridContainer").getChildAt(i).y);
     }
     movementArrow.graphics.lineTo();
 }
