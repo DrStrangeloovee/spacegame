@@ -51,7 +51,6 @@ function start() {
 function createPlayerObject() {
     playerObjectX = 0;
     playerObjectY = stageHeight;
-
     playerObject = new createjs.Shape();
     playerObject.graphics.beginFill("red").drawCircle(playerObjectX, playerObjectY, 25);
     stage.addChild(playerObject);
@@ -59,8 +58,8 @@ function createPlayerObject() {
 
 
 /*
- Draws the grid of dots, used for navigating the stage with the playerObject
- The grid is placed in a separate container for
+* Draws the grid of dots, used for navigating the stage with the playerObject
+* The grid is placed in a separate container for
 */
 function createGrid() {
     var indicator = new createjs.Shape();
@@ -103,7 +102,7 @@ function createGrid() {
 }*/
 
 /*
-Handles the keypresses
+* Handles the keypresses
 */
 function keyPressed(event) {
     switch(event.keyCode) {
@@ -128,9 +127,10 @@ function keyPressed(event) {
 }
 
 
-//Draws the x position of playerObject
+/*
+* Draws the x position of playerObject
+*/
 function drawX(x) {
-    //console.log(playerObjectX + x + " " + playerObjectY);
     if((playerObjectX + x) > stage.canvas.width || (playerObjectX + x) < 0){
         console.log("error out of stage");
         return playerObjectX;
@@ -138,9 +138,10 @@ function drawX(x) {
     return playerObjectX + x;
 }
 
-//Draws the x position of playerObject
+/*
+Draws the x position of playerObject
+ */
 function drawY(y) {
-    //console.log(playerObjectX + " " + playerObjectY + y);
     if((playerObjectY + y) > stage.canvas.height || (playerObjectY + y) < 0){
         console.log("error out of stage");
         return playerObjectY;
