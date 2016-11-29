@@ -30,14 +30,12 @@ function init() {
 
     //Drawing the stage and other background tasks
     createGrid();
-    //createPlayerObject();
+    createPlayerObject();
     //createObstacles();
     //drawMovement();
-    gridContainer.initialize();
     start();
 
     console.log("init");
-    console.log(gridContainer.getChildAt(1));
 
 
 
@@ -72,25 +70,24 @@ function createGrid() {
         for (var j = 0; j < stageHeight + 1; j += 100) {
             indicator.graphics.drawCircle(i, j, 5).beginFill("white");
             gridContainer.addChild(indicator);
-            //console.log(i);
-            //console.log(j);
 
             gridPositions.push([i , j]);
-            console.log(gridPositions);
+
+            //console.log(gridPositions[j]);
         }
     }
+    stage.addChild(gridContainer);
 
     /*TODO
      * May be useful if performance is important, still dont know if it works tho
      * gridContainer.cache(stageX, stageY, stageWidth, stageHeight);
      */
-    stage.addChild(gridContainer);
     console.table(gridPositions);
 }
 
 
 //TODO
-function createObstacles() {
+/*function createObstacles() {
     //not that hardcoded as of before, need to define a pattern where the obstacles may be placed
     for (var i = 0; i < 10; i++) {
         var temp = new createjs.Shape();
@@ -103,7 +100,7 @@ function createObstacles() {
         // playerObject.y = Math.floor(Math.random()*(stage.canvas.height-200+200)+20);
 
     }
-}
+}*/
 
 /*
 Handles the keypresses
@@ -111,29 +108,44 @@ Handles the keypresses
 function keyPressed(event) {
     switch(event.keyCode) {
         case KEYCODE_LEFT:
+            playerObjectX = drawX(-1);
             console.log("left");
             break;
         case KEYCODE_RIGHT:
+            playerObjectX = drawX(1);
             console.log("right");
             break;
         case KEYCODE_UP:
+            playerObjectY = drawY(1);
             console.log("up");
             break;
         case KEYCODE_DOWN:
+            playerObjectY = drawY(-1);
             console.log("down");
             break;
     }
     updateStage();
 }
 
-/*
-Draws the indicating arrow for the movement
-*/
-function drawMovement() {
-    for(var i = 0; i < gridContainer.numChildren; i++){
-        console.log("x: " + stage.getChildByName("gridContainer").getChildAt(i).x + "\n y: " + stage.getChildByName("gridContainer").getChildAt(i).y);
+
+//Draws the x position of playerObject
+function drawX(x) {
+    //console.log(playerObjectX + x + " " + playerObjectY);
+    if((playerObjectX + x) > stage.canvas.width || (playerObjectX + x) < 0){
+        console.log("error out of stage");
+        return playerObjectX;
     }
-    movementArrow.graphics.lineTo();
+    return playerObjectX + x;
+}
+
+//Draws the x position of playerObject
+function drawY(y) {
+    //console.log(playerObjectX + " " + playerObjectY + y);
+    if((playerObjectY + y) > stage.canvas.height || (playerObjectY + y) < 0){
+        console.log("error out of stage");
+        return playerObjectY;
+    }
+    return playerObjectY + y;
 }
 
 /*
@@ -141,6 +153,8 @@ Redraws the stage with the changes
 */
 function updateStage() {
     //console.log("update");
+    console.log(playerObjectX);
+    console.log(playerObjectY);
     stage.update();
 }
 
