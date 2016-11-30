@@ -4,12 +4,18 @@
 
 /** Init the Stage and variables */
 
-var stage, stageX, stageY, stageHeight, stageWidth, playerObject, playerObjectX, playerObjectY, gridContainer, gridPositions, movementArrowX, movementArrowY;
-
-gridPositions = [];
-gridContainer = new createjs.Container();
-movementArrowX = new createjs.Shape();
-movementArrowY = new createjs.Shape();
+var stage,
+    stageX,
+    stageY,
+    stageHeight,
+    stageWidth,
+    playerObject,
+    playerObjectX,
+    playerObjectY,
+    gridContainer,
+    gridPositions,
+    movementArrowX,
+    movementArrowY;
 
 var KEYCODE_LEFT = 37,
     KEYCODE_RIGHT = 39,
@@ -23,6 +29,10 @@ function init() {
     stageY = stage.y;
     stageWidth = stage.canvas.width;
     stageHeight = stage.canvas.height;
+    gridPositions = [];
+    gridContainer = new createjs.Container();
+    movementArrowX = new createjs.Shape();
+    movementArrowY = new createjs.Shape();
 
     createjs.Ticker.setFPS(1);
     createjs.Ticker.addEventListener("tick", updateStage, false);
