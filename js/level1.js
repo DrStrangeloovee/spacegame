@@ -17,11 +17,6 @@ var stage,
     movementArrowX,
     movementArrowY;
 
-gridPositions = [];
-gridContainer = new createjs.Container();
-movementArrowX = new createjs.Shape();
-movementArrowY = new createjs.Shape();
-
 var KEYCODE_LEFT = 37,
     KEYCODE_RIGHT = 39,
     KEYCODE_UP = 38,
@@ -34,6 +29,10 @@ function init() {
     stageY = stage.y;
     stageWidth = stage.canvas.width;
     stageHeight = stage.canvas.height;
+    gridPositions = [];
+    gridContainer = new createjs.Container();
+    movementArrowX = new createjs.Shape();
+    movementArrowY = new createjs.Shape();
 
     createjs.Ticker.setFPS(1);
     createjs.Ticker.addEventListener("tick", updateStage, false);
