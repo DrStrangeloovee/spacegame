@@ -4,11 +4,12 @@
 
 /** Init the Stage and variables */
 
-var stage, stageX, stageY, stageHeight, stageWidth, playerObject, playerObjectX, playerObjectY, gridContainer, gridPositions, movementArrow;
+var stage, stageX, stageY, stageHeight, stageWidth, playerObject, playerObjectX, playerObjectY, gridContainer, gridPositions, movementArrowX, movementArrowY;
 
 gridPositions = [];
 gridContainer = new createjs.Container();
-movementArrow = new createjs.Shape();
+movementArrowX = new createjs.Shape();
+movementArrowY = new createjs.Shape();
 
 var KEYCODE_LEFT = 37,
     KEYCODE_RIGHT = 39,
@@ -50,7 +51,7 @@ function start() {
 
 function createPlayerObject() {
     playerObjectX = 0;
-    playerObjectY = stageHeight;
+    playerObjectY = 0;
     playerObject = new createjs.Shape();
     playerObject.graphics.beginFill("red").drawCircle(playerObjectX, playerObjectY, 25);
     stage.addChild(playerObject);
@@ -81,7 +82,6 @@ function createGrid() {
      * May be useful if performance is important, still dont know if it works tho
      * gridContainer.cache(stageX, stageY, stageWidth, stageHeight);
      */
-    console.table(gridPositions);
 }
 
 
@@ -107,19 +107,19 @@ function createGrid() {
 function keyPressed(event) {
     switch(event.keyCode) {
         case KEYCODE_LEFT:
-            playerObjectX = drawX(-1);
+            playerObjectX = moveX(-1);
             console.log("left");
             break;
         case KEYCODE_RIGHT:
-            playerObjectX = drawX(1);
+            playerObjectX = moveX(1);
             console.log("right");
             break;
         case KEYCODE_UP:
-            playerObjectY = drawY(1);
+            playerObjectY = moveY(-1);
             console.log("up");
             break;
         case KEYCODE_DOWN:
-            playerObjectY = drawY(-1);
+            playerObjectY = moveY(1);
             console.log("down");
             break;
     }
@@ -128,9 +128,9 @@ function keyPressed(event) {
 
 
 /*
-* Draws the x position of playerObject
+* Moves the x position of playerObject
 */
-function drawX(x) {
+function moveX(x) {
     if((playerObjectX + x) > stage.canvas.width || (playerObjectX + x) < 0){
         console.log("error out of stage");
         return playerObjectX;
@@ -139,9 +139,9 @@ function drawX(x) {
 }
 
 /*
-Draws the x position of playerObject
- */
-function drawY(y) {
+* Moves the y position of playerObject
+*/
+function moveY(y) {
     if((playerObjectY + y) > stage.canvas.height || (playerObjectY + y) < 0){
         console.log("error out of stage");
         return playerObjectY;
@@ -149,13 +149,21 @@ function drawY(y) {
     return playerObjectY + y;
 }
 
+
+/*
+* Draws the movement arrow for y
+*/
+function drawArrow() {
+    movementArrowY.graphics.setStrokeStyle(1).beginStroke("rgba(0,0,0,1)");
+    movementArrowY.graphics.moveTo(playerObjectX, playerObjectY);
+}
+
 /*
 Redraws the stage with the changes
 */
 function updateStage() {
     //console.log("update");
-    console.log(playerObjectX);
-    console.log(playerObjectY);
+
     stage.update();
 }
 
