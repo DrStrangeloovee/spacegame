@@ -4,7 +4,18 @@
 
 /** Init the Stage and variables */
 
-var stage, stageX, stageY, stageHeight, stageWidth, playerObject, playerObjectX, playerObjectY, gridContainer, gridPositions, movementArrowX, movementArrowY;
+var stage,
+    stageX,
+    stageY,
+    stageHeight,
+    stageWidth,
+    playerObject,
+    playerObjectX,
+    playerObjectY,
+    gridContainer,
+    gridPositions,
+    movementArrowX,
+    movementArrowY;
 
 gridPositions = [];
 gridContainer = new createjs.Container();
