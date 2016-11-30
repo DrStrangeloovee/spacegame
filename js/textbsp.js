@@ -16,14 +16,6 @@ score.y=476;
 Asteroiden hinzufügen. Diese fallen vom Himmel in einem abstand von 1.000 Millisekunde
 Die Position auf der x Achse ist random
  */
-
-
-
-
-
-
-
-
 function addAsteroid(){
     var a=new Bitmap();
     a.x=Math.floor(Math.random() * (320-50));
