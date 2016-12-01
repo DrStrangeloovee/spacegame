@@ -2,7 +2,7 @@
  * Created by marco on 24.11.16.
  */
 
-/** Init the Stage and variables */
+// Init the Stage and variables
 
 var stage,
     stageX,
@@ -22,13 +22,14 @@ var KEYCODE_LEFT = 37,
     KEYCODE_UP = 38,
     KEYCODE_DOWN = 40;
 
-function init() {
 
-    stage = new createjs.Stage(document.getElementById("stage"));
+
+function init() {
+    stage = new createjs.Stage("stage");
     stageX = stage.x;
     stageY = stage.y;
-    stageWidth = stage.canvas.width;
-    stageHeight = stage.canvas.height;
+    //stageWidth = stage.canvas.width;
+    //stageHeight = stage.canvas.height;
     gridPositions = [];
     gridContainer = new createjs.Container();
     movementArrowX = new createjs.Shape();
@@ -39,26 +40,30 @@ function init() {
 
     this.document.onkeydown = keyPressed;
 
+    //createPlayerObject();
     //Drawing the stage and other background tasks
-    createGrid();
-    createPlayerObject();
+    //createGrid();
     //createObstacles();
     //drawMovement();
     start();
+    drawLine();
+    drawArrow();
+
 
     console.log("init");
-
-
-
 }
+
 /*
- Starts the game and redraws a clean new stage with default values
+* Starts the game and redraws a clean new stage with default values
 */
 function start() {
     console.log("start");
     updateStage();
 }
 
+/*
+* Draws the moveable playerObject
+*/
 function createPlayerObject() {
     playerObjectX = 0;
     playerObjectY = 0;
@@ -66,7 +71,6 @@ function createPlayerObject() {
     playerObject.graphics.beginFill("red").drawCircle(playerObjectX, playerObjectY, 25);
     stage.addChild(playerObject);
 }
-
 
 /*
 * Draws the grid of dots, used for navigating the stage with the playerObject
@@ -93,7 +97,6 @@ function createGrid() {
      * gridContainer.cache(stageX, stageY, stageWidth, stageHeight);
      */
 }
-
 
 //TODO
 /*function createObstacles() {
@@ -136,7 +139,6 @@ function keyPressed(event) {
     updateStage();
 }
 
-
 /*
 * Moves the x position of playerObject
 */
@@ -159,21 +161,35 @@ function moveY(y) {
     return playerObjectY + y;
 }
 
-
-/*
-* Draws the movement arrow for y
-*/
 function drawArrow() {
-    movementArrowY.graphics.setStrokeStyle(1).beginStroke("rgba(0,0,0,1)");
-    movementArrowY.graphics.moveTo(playerObjectX, playerObjectY);
+    console.log("draw arrow");
+    var arrow = new createjs.Shape();
+    arrow.graphics.moveTo(playerObjectX, playerObjectY).setStrokeStyle(3).beginStroke("#000000").lineTo(300,60);
+    stage.addChild(arrow);
+    updateStage();
 }
+
+function drawLine(){
+    var myGraphics = new createjs.Graphics();
+    myGraphics.beginStroke("#ffffff").setStrokeStyle(4);
+    myGraphics.moveTo(100,300);
+    myGraphics.lineTo(300,300);
+    var shape3 = new createjs.Shape(myGraphics);
+    stage.addChild(shape3);
+}
+
+
+stage.mouseMoveOutside = true;
+stage.on("stagemousemove", function(evt) {
+    console.log("stageX/Y: "+evt.stageX+","+evt.stageY); // always in bounds
+    console.log("rawX/Y: "+evt.rawX+","+evt.rawY); // could be < 0, or > width/height
+});
 
 /*
 Redraws the stage with the changes
 */
 function updateStage() {
     //console.log("update");
-
     stage.update();
 }
 
