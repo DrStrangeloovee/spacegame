@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Space Game</title>
-    <script src="../lib/easeljs-0.8.2.min.js"></script>
+    <title>Easel simple game</title>
+    <script src="easel.js"></script>
     <script>
         var canvas;
         var stage;
@@ -26,7 +26,7 @@
             canvas.onmouseup = onMouseUp;
 
             bg = new Image();
-            bg.src = "../.jpg";
+            bg.src = "../space bg.jpg";
             bg.onload = setBG;
 
             var image = new Image();
@@ -137,6 +137,6 @@
 <p>
     <canvas id="canvas" width="960" height="580"></canvas>
 </p>
-<p>getObjectUnderPoint used in the tutorial only works if the HTML page is served from a web server, unless you have Safari.</p>
+
 </body>
 </html>
