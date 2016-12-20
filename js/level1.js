@@ -51,6 +51,18 @@ function init() {
 
 
     console.log("init");
+
+
+
+    var circle = new createjs.Shape();
+    circle.drawCircle(0, 0, 5).beginFill("white");
+    stage.add(circle);
+    circle.on("pressmove", function(evt) {
+        evt.target.x = evt.stageX;
+        evt.target.y = evt.stageY;
+    });
+    circle.on("pressup", function(evt) { console.log("up"); });
+
 }
 
 /*
@@ -192,5 +204,8 @@ function updateStage() {
     //console.log("update");
     stage.update();
 }
+
+
+
 
 window.addEventListener("load", init, false);
