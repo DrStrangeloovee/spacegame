@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Easel simple game</title>
+    <title>Asteroid Game</title>
     <script src="easel.js"></script>
     <script>
         var canvas;
@@ -99,6 +99,7 @@
             txt.text = "Score: "+score;
             stage.update();
         }
+
         function gameOver(){
             gameTxt = new Text("Game Over\n\n", "36px Arial", "#FFF");
             gameTxt.text += "Click to play again";
