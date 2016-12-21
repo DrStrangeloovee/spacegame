@@ -18,17 +18,21 @@ var startX, startY, nextX, nextY;
 //Movement speed of arrow
 var SPEED = 50;
 
-
+//lmb state
+var clicked = false;
+var mouseInBounds = false;
 
 
 function init() {
 
     stage = new createjs.Stage("stage");
-    stage.enableMouseOver(20);
+    stage.enableMouseOver(30);
+    stage.enableDOMEvents(true);
     createjs.Ticker.setFPS(30);
     createjs.Ticker.addEventListener("tick", tick);
-    createjs.Ticker.addEventListener("tick", stage);
-
+    stage.addEventListener("stagemousemove", mouseMove);
+    stage.addEventListener("stagemousedown", mouseDown);
+    stage.addEventListener("stagemouseup", mouseUp);
 
     //start position
     startX = 0;
@@ -36,32 +40,47 @@ function init() {
 
 
 
+    line = new createjs.Shape();
+    stage.addChild(line);
+    line.graphics.moveTo(startX, startY);
+    line.graphics.lineTo(startX, startY);
 
+    line.graphics.setStrokeStyle(20).beginStroke("rgba(0,0,0,1)");
 
 
     //set destination coordinates
     // nextX = 0;
     // nextY = 0;
-    // line = new createjs.Shape();
-    // stage.addChild(line);
-    // line.graphics.moveTo(curX, curY);
-    // line.graphics.setStrokeStyle(3).beginStroke("rgba(0,0,0,1)");
-    // var line = new createjs.Shape();
-    // line.graphics.setStrokeStyle(3);
-    // line.graphics.beginStroke("rgba(0,0,0,1)");
-    // line.graphics.moveTo(startX, startY);
+
+
+    //
     // startY++;
-    // line.graphics.lineTo(startX, startY);
+    //
     // line.graphics.endStroke();
     //keyboard handlers
     // this.document.onkeydown = keyPressed;
 
-    stage.addEventListener("click", mouseOver());
 }
 
-function mouseOver() {
-    console.log("click  ");
+function mouseDown() {
+    clicked = true;
+    console.log("mdown");
 }
+function mouseUp() {
+    clicked = false;
+    console.log("mup");
+}
+
+function mouseMove() {
+    mouseInBounds = true;
+    console.log("x " + stage.mouseX + "\n" + "y " + stage.mouseY);
+    if(clicked){
+        line.graphics.lineTo(stage.mouseX, stage.mouseY);
+        stage.update();
+    }
+}
+
+
 
 /**
  * Handles the keypresses
@@ -90,7 +109,7 @@ function keyPressed(event) {
             console.log("down");
             break;
     }
-    updateStage();
+    stage.update();
 }
 
 
@@ -99,10 +118,6 @@ function keyPressed(event) {
  * @param event
  */
 function tick(event) {
-
-    stage.on("mouseover", function () {
-            console.log("over");
-        });
     stage.update();
 }
 
