@@ -13,121 +13,103 @@ var SPEED = 5;
 
 var stage, line;
 
-var curX, curY, nextX, nextY;
+var startX, startY, nextX, nextY;
 
 //Movement speed of arrow
-var movement = 100;
+var SPEED = 50;
 
-var leftArrow, rightArrow, upArrow, downArrow = false;
 
-function init()
-{
-    //setup createjs
+
+
+function init() {
+
     stage = new createjs.Stage("stage");
-    createjs.Ticker.setFPS(60);
+    stage.enableMouseOver(20);
+    createjs.Ticker.setFPS(30);
     createjs.Ticker.addEventListener("tick", tick);
-
-    curX = 50;
-    curY = 50;
-    //add rectangle to stage
-/*
-    moveRectangle = new createjs.Shape();
-    moveRectangle.graphics.beginFill("#000000");
-    moveRectangle.graphics.drawRect(0,0,RECT_SIZE ,RECT_SIZE );
-    moveRectangle.graphics.endFill();
-    moveRectangle.x = stage.canvas.width/2 - RECT_SIZE/2;
-    moveRectangle.y = stage.canvas.height/2 - RECT_SIZE/2;
-    stage.addChild(moveRectangle);
-*/
+    createjs.Ticker.addEventListener("tick", stage);
 
 
-    // Set the 'brush stroke' style (basically the thickness of the line)
-    // Then start drawing a black line
-    line = new createjs.Shape();
-    stage.addChild(line);
-    line.graphics.setStrokeStyle(3).beginStroke("rgba(0,0,0,1)");
-
-// Tell EaselJS where to go to start drawing the line
-    line.graphics.moveTo(curX, curY);
-
-// Tell EaselJS where to draw the line to
-    line.graphics.lineTo(280, 305);
+    //start position
+    startX = 0;
+    startX = 0;
 
 
 
 
+
+
+    //set destination coordinates
+    // nextX = 0;
+    // nextY = 0;
+    // line = new createjs.Shape();
+    // stage.addChild(line);
+    // line.graphics.moveTo(curX, curY);
+    // line.graphics.setStrokeStyle(3).beginStroke("rgba(0,0,0,1)");
+    // var line = new createjs.Shape();
+    // line.graphics.setStrokeStyle(3);
+    // line.graphics.beginStroke("rgba(0,0,0,1)");
+    // line.graphics.moveTo(startX, startY);
+    // startY++;
+    // line.graphics.lineTo(startX, startY);
+    // line.graphics.endStroke();
     //keyboard handlers
-    window.onkeyup = keyUpHandler;
-    window.onkeydown = keyDownHandler;
+    // this.document.onkeydown = keyPressed;
+
+    stage.addEventListener("click", mouseOver());
+}
+
+function mouseOver() {
+    console.log("click  ");
+}
+
+/**
+ * Handles the keypresses
+ * @param event
+ */
+function keyPressed(event) {
+    switch(event.keyCode) {
+        case KEYCODE_LEFT:
+            line.graphics.lineTo(curX - SPEED, curY);
+            curX -= SPEED;
+            console.log("left");
+            break;
+        case KEYCODE_RIGHT:
+            line.graphics.lineTo(curX + SPEED, curY);
+            curX += SPEED;
+            console.log("right");
+            break;
+        case KEYCODE_UP:
+            line.graphics.lineTo(curX, curY - SPEED);
+            curY -= SPEED;
+            console.log("up");
+            break;
+        case KEYCODE_DOWN:
+            line.graphics.lineTo(curX, curY + SPEED);
+            curY += SPEED;
+            console.log("down");
+            break;
+    }
+    updateStage();
 }
 
 
-function keyDownHandler(e)
-{
-    switch(e.keyCode)
-    {
-        case KEYCODE_LEFT:  leftArrow = true; break;
-        case KEYCODE_RIGHT: rightArrow = true; break;
-        case KEYCODE_UP:    upArrow = true; break;
-        case KEYCODE_DOWN:  downArrow = true; break;
-    }
-}
+/**
+ * Do something when tick event is fired
+ * @param event
+ */
+function tick(event) {
 
-function keyUpHandler(e)
-{
-    switch(e.keyCode)
-    {
-        case KEYCODE_LEFT:  leftArrow = false; break;
-        case KEYCODE_RIGHT: rightArrow = false; break;
-        case KEYCODE_UP:    upArrow = false; break;
-        case KEYCODE_DOWN:  downArrow = false; break;
-    }
-}
-
-
-function move()
-{
-    if(leftArrow){
-        line.graphics.lineTo(curX - movement, curY);
-        curX -= movement;
-        //line.endStroke();
-    }
-    if(rightArrow){
-        line.graphics.lineTo(curX + movement, curY);
-        curX += movement;
-        //line.endStroke();
-    }
-    if(upArrow){
-        line.graphics.lineTo(curX, curY - movement);
-        curY -= movement;
-        //line.endStroke();
-    }
-    if(downArrow){
-        line.graphics.lineTo(curX, curY + movement);
-        curY += movement;
-        //line.endStroke();
-    }
-}
-
-
-function tick(e)
-{
-    move();
+    stage.on("mouseover", function () {
+            console.log("over");
+        });
     stage.update();
 }
 
-function plan() {
-    //remove previous line
-    stage.removeChild(line);
 
-    nextX = document.getElementById("x").value;
-    nextY = document.getElementById("y").value;
-
-
-
-}
-
-
+/**
+ *
+ */
 
 /*
 function init() {
@@ -184,4 +166,103 @@ function init() {
     stage.update();
 }
 */
+
+
+
+
+//Snake game
+// (function(){
+//
+//     var myCanvas = document.getElementById("myCanvas"),
+//         stage = new createjs.Stage("myCanvas"),
+//         //start line
+//         startPoint = {x:myCanvas.width/2, y:myCanvas.height/2},
+//         //end line
+//         endPoint = {x:myCanvas.width/2 + 250, y:myCanvas.height/2},
+//
+// //dots
+//         spaceBetween = 20,
+//         radius = 4,
+//         increment = 0,
+//         line = new createjs.Shape();
+//
+//     stage.addChild(line);
+//
+//     function drawCanvas(stage) {
+//         line.graphics.clear();
+//         line.x = startPoint.x;
+//         line.y = startPoint.y;
+//
+//         /* Different approach for rotation in CreateJS. Shape objects have a rotation property,
+//          * which is measured in degrees. We don't translate positions or save/restore the context
+//          * stack. We just let CreateJS do it for us. We'll make a horizontal line with all of the
+//          * dots on it, and then we'll rotate that line.
+//          */
+//         var dy = endPoint.y - startPoint.y,
+//             dx = endPoint.x - startPoint.x,
+//             lineAngle = Math.atan2(dy, dx) * (180/Math.PI), // Converting from radians.
+//             distance = getDistance(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+//         numDots = Math.floor(distance/spaceBetween),
+//             partialDistance = distance / numDots;
+//         line.x2 = startPoint.x + distance;
+//
+//
+//         line.graphics
+//             .setStrokeStyle(4,"round")
+//             .beginStroke("rgba(255,255,255,1)")
+//             .moveTo(0,0)
+//             .lineTo(distance,0)
+//             .endStroke();
+//
+//
+//         var midPoint = {}; // Cleared on each loop
+//         for (var i = 0; i < numDots; i++) {
+//             midPoint.x = increment + partialDistance*i;
+//             midPoint.y = 0;
+//
+//             line.graphics
+//                 .setStrokeStyle(4,"round")
+//                 .beginFill("rgba(255,255,255,1)")
+//                 .moveTo(midPoint.x, midPoint.y)
+//                 .arc(midPoint.x, midPoint.y, radius, 0, Math.PI * 2, true)
+//                 .endFill();
+//
+//             increment = ( increment < partialDistance ) ? increment+.025 : 1;
+//         }
+//
+//
+//         //line.rotation = lineAngle; // Set the line at the correct angle between points.
+//         line.rotation +=.3 // Forget the correct angle and just rotate.
+//
+//         line.rotation = ( line.rotation > 360 ) ? line.rotation - 360 : line.rotation;
+//         stage.update();
+//     }
+//
+//
+//
+//
+//     function getDistance(x1, y1, x2, y2) {
+//         return ( Math.sqrt( Math.pow( (x2 - x1) ,2) + Math.pow( (y2 - y1) ,2) ) );
+//
+//     }
+//
+//     // Animation Loop
+//     window.requestAnimFrame = (function(){
+//         return	window.requestAnimationFrame		||
+//             window.webkitRequestAnimationFrame	||
+//             window.mozRequestAnimationFrame		||
+//             window.oRequestAnimationFrame		||
+//             window.msRequestAnimationFrame		||
+//             function( callback ){
+//                 window.setTimeout(callback, 1000 / 60);
+//             };
+//     })();
+//
+//     (function animloop(){
+//         requestAnimFrame(animloop);
+//         drawCanvas(stage);
+//     })();
+//
+//
+// }());
 

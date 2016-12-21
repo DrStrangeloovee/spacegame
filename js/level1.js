@@ -194,7 +194,7 @@ function drawLine(){
 stage.mouseMoveOutside = true;
 stage.on("stagemousemove", function(evt) {
     console.log("stageX/Y: "+evt.stageX+","+evt.stageY); // always in bounds
-    console.log("rawX/Y: "+evt.rawX+","+evt.rawY); // could be < 0, or > width/height
+    console.log("rawX/Y: "+evt.rawX+","+evt.rawY); // could be < 0 or > width/height
 });
 
 /*
