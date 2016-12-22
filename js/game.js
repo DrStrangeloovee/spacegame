@@ -1,7 +1,7 @@
 function init() {
     var stage = new createjs.Stage("canvas");
     var gridContainer = new createjs.Container();
-
+    var line;
     var lineList = [];
 
     const img = {
@@ -46,7 +46,7 @@ function init() {
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
     createjs.Ticker.addEventListener("tick", handleTick);
-    createjs.Ticker.setFPS(60);
+    createjs.Ticker.setFPS(30);
 
     var ship = {
         bitmap: false,
@@ -66,16 +66,16 @@ function init() {
         move: function (dir) {
             if (dir == 'left' && this.bitmap.x > 5)
                 this.bitmap.x -= this.speed;
-            draw();
+            drawDown();
             if (dir == 'right' && this.bitmap.x < (stage.canvas.width - this.bitmap.image.width) - 5)
                 this.bitmap.x += this.speed;
-            draw();
+            drawDown();
             if (dir == 'up' && this.bitmap.y > 5)
                 this.bitmap.y -= this.speed;
-            draw();
+            drawDown();
             if (dir == 'down' && this.bitmap.y < (stage.canvas.height - this.bitmap.image.height) - 5)
                 this.bitmap.y += this.speed;
-            draw();
+            drawDown();
             stage.update();
         }
 
@@ -91,22 +91,19 @@ function init() {
         enter: 13
     };
 
-    function draw() {
-        stage.removeChild(stage.getChildByName("0"));
-        var line = new createjs.Shape();
+
+    /**
+     * Draw while key is pressed
+     */
+    function drawDown() {
+        console.log("down");
+        line = new createjs.Shape();
         line.graphics.setStrokeStyle(3).beginStroke("white");
         line.graphics.moveTo(ship.bitmap.x, ship.bitmap.y);
-        stage.addChild(line);
-
-        line.graphics.lineTo(200, 200);
-        line.graphics.endStroke();
-
         line.name = lineList.length + "";
-        line.graphics.x = 100;
-        line.graphics.y = 100;
+        stage.addChild(line);
         lineList.push(line);
         console.log(lineList);
-
         // stage.addChild(line);
         // line.graphics.moveTo(curX, curY);
         // line.graphics.setStrokeStyle(3).beginStroke("rgba(0,0,0,1)");
@@ -116,8 +113,21 @@ function init() {
 // line.graphics.moveTo(startX, startY);
     }
 
+    /**
+     * Draw when key is released
+     */
+    function drawUp() {
+        console.log("up");
+        line.graphics.lineTo(ship.bitmap.x, ship.bitmap.y);
+        stage.addChild(line);
+    }
+
     ship.append();
 
+    /**
+     * Handles the tick event
+     * @param event
+     */
     function handleTick(event) {
         //console.log(ship.direction);
         for (var v in ship.direction) {
@@ -129,6 +139,7 @@ function init() {
 
     function handleKeyDown(e) {
         e.preventDefault();
+        // drawDown();
         var key = e.keyCode;
         if (key == keys.left)
             ship.direction.left = true;
@@ -138,9 +149,11 @@ function init() {
             ship.direction.up = true;
         if (key == keys.down)
             ship.direction.down = true;
+
     }
 
     function handleKeyUp(e) {
+        // drawUp();
         var key = e.keyCode;
         if (key == keys.left)
             ship.direction.left = false;
@@ -150,6 +163,7 @@ function init() {
             ship.direction.up = false;
         if (key == keys.down)
             ship.direction.down = false;
+
     }
 
     /**
