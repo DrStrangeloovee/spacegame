@@ -8,7 +8,7 @@
         var canvas;
         var stage;
         var bg;
-        var score;
+
         var bmpList;
         var bitmap;
         var txt;
@@ -20,7 +20,7 @@
         function init() {
             canvas = document.getElementById("canvas");
             stage = new Stage(canvas);
-            score = 0;
+
 
             canvas.onmousedown = onMouseDown;
             canvas.onmouseup = onMouseUp;
@@ -33,12 +33,13 @@
             image.src = "../spaceship.png";
             image.onload = createShips;
         }
-
+    //setzt ein Hintergrundbild
         function setBG(event){
             var bgrnd = new Bitmap(bg);
             stage.addChild(bgrnd);
             stage.update();
         }
+        //Createt die Ships
         function createShips(event){
             var image = event.target;
             var container = new Container();
@@ -64,6 +65,7 @@
 
             Ticker.addListener(window);
         }
+        //"Resettet" die Enemies(die ships)
         function resetEnemy(ship){
             ship.x = canvas.width + Math.random()*500;
             ship.y = canvas.height * Math.random()|0;
@@ -79,7 +81,7 @@
                 tempText = tempText.substring(0,4);
                 if (tempText!=null && tempText=="ship"){
                     resetEnemy(mouseTarget);
-                    score+=50;
+
                     clicked=false;
                 }
             }
@@ -96,11 +98,12 @@
                     }
                 }
             }
-            txt.text = "Score: "+score;
+
             stage.update();
         }
 
         function gameOver(){
+
             gameTxt = new Text("Game Over\n\n", "36px Arial", "#FFF");
             gameTxt.text += "Click to play again";
             gameTxt.textAlign = "center";
@@ -114,15 +117,17 @@
                 resetEnemy(bmp);
             }
             stage.update();
+            console.log("Game Over, click to play again!");
             canvas.onclick = handleClick;
         }
         function handleClick(){
             canvas.onclick=null;
             stage.removeChild(gameTxt);
-            score=0;
+
 
             play=true;
         }
+
         function onMouseDown(){
             if(!e){var e = window.event;}
             clicked = true;
