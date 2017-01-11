@@ -48,6 +48,7 @@ function init() {
     start();
     drawLine();
     drawArrow();
+    createGrid();
 
 
     console.log("init");
