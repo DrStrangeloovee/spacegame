@@ -13,12 +13,18 @@ var stage,
     startX,
     startY,
     line,
-    obstacleContainer;
+    obstacleContainer,
+    targetX,
+    targetY;
+
+var currentTargetNumber = 0;
 
 
 function init() {
+
     stage = new createjs.Stage("stage");
     createjs.Ticker.setFPS(60);
+    createjs.Ticker.setInterval(30);
     createjs.Ticker.addEventListener("tick", stage);
 
     stageHeight = stage.canvas.height;
@@ -27,11 +33,20 @@ function init() {
     startX = 0;
     startY = 0;
 
-    playerObject = new createjs.canvas.
+    var g = new createjs.Graphics().setStrokeStyle(1).beginStroke("red").beginFill("red").drawCircle(0, 0, 30);
+    playerObject = new createjs.Shape(g);
+    stage.addChild(playerObject);
 
     console.log("loaded");
     console.log("starting game...");
     startGame();
+}
+
+/**
+ * handles the tick
+ */
+function tick(event) {
+    console.log("tick tock");
 }
 
 /**
@@ -43,7 +58,13 @@ function addLine(){
 
     if(x > stageWidth || x < 0 || y > stageHeight || y < 0){
         console.log("out of space, try again");
-    }else {
+    }else if(lines.length < 1){
+        targetX = x;
+        targetY = y;
+        lines.push([x, y]);
+        drawLine();
+        console.log(lines);
+    }else{
         lines.push([x, y]);
         drawLine();
         console.log(lines);
@@ -70,20 +91,58 @@ function createObstacles(){
         stage.addChild(obstacle);
     }
 }
+/**
+ * after game hast started, the obstacles start to move from right to left
+ */
+function moveObstacles() {
+
+}
 
 /**
  * Starts the game
  */
 function startGame() {
     //lines begin to draw at left upper corner
-    line = new createjs.Shape();
-    line.graphics.setStrokeStyle(5).beginStroke("#ffffff");
+
+
+
+    var g = new createjs.Graphics().setStrokeStyle(5).beginStroke("#ffffff");
+    line = new createjs.Shape(g);
     line.graphics.moveTo(0, 0);
     stage.addChild(line);
 
     createObstacles();
 
     stage.update();
+}
+
+/**
+ * animations starts
+ */
+function fly() {
+    if(lines.length < 0){
+        console.log("no routes defined!");
+        return false;
+    }
+    //define the index of the current destination
+    console.log("lets fly");
+    createjs.Tween.get(playerObject, { loop: false }).to({ x: targetX , y: targetY}, 1000, createjs.Ease.getPowInOut(4)).addEventListener("complete", handleDestination);
+}
+
+/**
+ * After the tween animation is finished you can do here some stuff, for now it only updates the playerObject coordinates to the new ones
+ */
+function handleDestination() {
+    console.log("tween completed");
+    playerObjectX = playerObject.x;
+    playerObjectY = playerObject.y;
+    targetX = lines[currentTargetNumber][0];
+    targetY = lines[currentTargetNumber][1];
+
+    console.log(playerObjectX);
+    console.log(playerObjectY);
+    stage.update();
+    currentTargetNumber += 1;
 }
 
 window.addEventListener("loaded", init, false);
