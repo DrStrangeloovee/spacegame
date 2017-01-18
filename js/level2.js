@@ -12,7 +12,15 @@ var stage,
     startY,
     line,
     targetX,
-    targetY;
+    targetY,
+    playerImage;
+
+
+//if mouse is moving over stage, to pause the obstacle movement
+var moving = false;
+
+var shipContainer = new createjs.Container();
+var obstacleContainer = new createjs.Container();
 
 
 //line which is drawn when ship is moved
@@ -26,11 +34,6 @@ var amountObstacles = 20;
 //playerState
 var alive = true;
 
-var currentTargetNumber = 0;
-
-var movementContainer = new createjs.Container();
-
-
 function init() {
 
     stage = new createjs.Stage("stage");
@@ -38,7 +41,7 @@ function init() {
     createjs.Ticker.setInterval(30);
     createjs.Ticker.addEventListener("tick", stage);
     createjs.Ticker.addEventListener("tick", tick);
-    stage.enableMouseOver(60);
+    stage.enableMouseOver(20);
 
     stageHeight = stage.canvas.height;
     stageWidth = stage.canvas.width;
@@ -46,17 +49,18 @@ function init() {
     startX = 0;
     startY = 0;
 
+    playerImage = new Image();
+    playerImage.src = "assets/spaceship.png";
+    playerImage.onload = handleImageLoad;
+
+    function handleImageLoad(e) {
+        createPlayerObject();
+    }
+
     console.log("loaded");
     console.log("starting game...");
-    startGame();
-}
 
-function createPlayerObject() {
-    playerObject = new createjs.Shape();
-    playerObject.graphics.setStrokeStyle(1).beginStroke("red").beginFill("red").drawCircle(0, 0, 15);
-    playerObject.x = 0;
-    playerObject.y = 0;
-    stage.addChild(playerObject);
+    startGame();
 }
 
 /**
@@ -65,6 +69,7 @@ function createPlayerObject() {
 function tick(e) {
     var movementLine = null;
     playerObject.on("pressmove", function(e) {
+        moving = true;
 
         // Create a new arrow on stage press
         //current = new createjs.Shape().set({x:stage.mouseX, y:stage.mouseY});
@@ -91,8 +96,8 @@ function tick(e) {
             // Math.sqrt on the amplitude and frequency make it scale as it gets larger
             //drawArrow(current, l, Math.sqrt(l), Math.sqrt(l));
 
-            // Rotate to touch the mouse
-            movementLine.graphics.rotation = Math.atan2(h,w) * 180/Math.PI;
+            // Rotate to touch the mouse, i dont know why but setting the playerObjet rotation the same with the movementLine makes the whole thing more smooth
+            movementLine.graphics.rotation = playerObject.Bitmap.rotation = Math.atan2(h,w) * 180/Math.PI;
             stage.update();
         });
 
@@ -103,6 +108,26 @@ function tick(e) {
             movementLine = null;
         });
     });
+
+    //move the obstacles
+    if(alive && !moving){
+        moveObstacles();
+    }else{
+        alive = false;
+        endGame();
+    }
+}
+
+function createPlayerObject() {
+    playerObject = new createjs.Bitmap(playerImage);
+    //playerObject.graphics.setStrokeStyle(1).beginStroke("red").beginFill("red").drawCircle(0, 0, 15);
+    playerObject.x = 0;
+    playerObject.y = 0;
+    playerObject.regX = playerImage.width/2;
+    playerObject.regY = playerImage.height/2;
+
+    shipContainer.addChild(playerObject);
+    stage.update();
 }
 
 /**
@@ -148,8 +173,7 @@ function createObstacles(){
         //g.setBounds();
         obstacle.name = "obst_" + i;
         obstacles.push(obstacle);
-        stage.addChild(obstacle);
-        //console.log(stage.getChildAt(i));
+        obstacleContainer.addChild(obstacle);
     }
 }
 
@@ -181,6 +205,7 @@ function startGame() {
     createPlayerObject();
     createObstacles();
 
+    stage.addChild(shipContainer, obstacleContainer);
     stage.update();
 }
 
