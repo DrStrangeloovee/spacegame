@@ -28,12 +28,14 @@ var alive = true;
 
 var currentTargetNumber = 0;
 
+var movementContainer = new createjs.Container();
+
 
 function init() {
 
     stage = new createjs.Stage("stage");
     createjs.Ticker.setFPS(60);
-    createjs.Ticker.setInterval(120);
+    createjs.Ticker.setInterval(30);
     createjs.Ticker.addEventListener("tick", stage);
     createjs.Ticker.addEventListener("tick", tick);
     stage.enableMouseOver(60);
@@ -44,9 +46,9 @@ function init() {
     startX = 0;
     startY = 0;
 
-    movementLine = new createjs.Shape();
-    movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
-    movementLine.graphics.moveTo(0, 0);
+
+
+    stage.addChild(movementContainer);
 
     console.log("loaded");
     console.log("starting game...");
@@ -61,22 +63,162 @@ function createPlayerObject() {
     stage.addChild(playerObject);
 }
 
+function drawArrow(arrow, length, frequency, amplitude) {
+    arrow.graphics.clear().ss(3).s("#000").mt(0,0);
+    var arrowSize = Math.sqrt(length);
+    for (var i=0, l=(length-arrowSize)/frequency; i<l; i++) {
+        var p = frequency/4, breakAfter = false,
+            a = amplitude;
+
+        // More fun line amplitude
+        a = Math.pow(amplitude, 0.5/l)*i;
+
+        // Prevent the line from being longer than the arrow
+        // Adjusts the period to fit.
+        if (i*frequency + p*2 > length-arrowSize) {
+            p = (length-arrowSize*1.5 - i*frequency) / 2;
+            breakAfter = true;
+        }
+
+        // Draw the first part of the wave
+        arrow.graphics.qt(i*frequency + p, a, i*frequency+p*2, 0);
+        if (breakAfter) { break; } // Break if it would be too long
+
+        // Adjust the period if the second part is too long
+        if (i*frequency + p*4 > length-arrowSize) {
+            p = (length-arrowSize*1.5 - i*frequency) / 4; // 1.5 because its a triangle
+        }
+
+        // Draw the second part of the wave
+        arrow.graphics.qt(i*frequency + p*3, -a, i*frequency+p*4, 0);
+    }
+
+}
+
+
 /**
  * handles the tick
  */
-function tick(event) {
-    playerObject.on("pressmove", function(event) {
-        event.target.x = event.stageX;
-        event.target.y = event.stageY;
+function tick(e) {
+    /*stage.on("stagemousedown", function(e) {
+
+        // Create a new arrow on stage press
+        current = new createjs.Shape().set({x:stage.mouseX, y:stage.mouseY});
+        stage.addChild(current);
+
+        // Update the current arrow on move
+        var moveListener = stage.on("stagemousemove", function(e) {
+            // Determine the length between the start and end point using pythagoras
+            var w = stage.mouseX - current.x;
+            var h = stage.mouseY - current.y;
+            var l = Math.sqrt(w*w+h*h);
+
+            // Draw the arrow.
+            // Math.sqrt on the amplitude and frequency make it scale as it gets larger
+            drawArrow(current, l, Math.sqrt(l), Math.sqrt(l));
+
+            // Rotate to touch the mouse
+            current.rotation = Math.atan2(h,w) * 180/Math.PI;
+            stage.update();
+        });
+
+        // Stop the drag
+        var upListener = stage.on("stagemouseup", function() {
+            stage.off("stagemousemove", moveListener);
+            stage.off("stagemouseup", upListener);
+            current = null;
+        });
     });
-    playerObject.on("pressup", function(event) { console.log("up"); });
+     */
+    var movementLine = null;
+    playerObject.on("pressmove", function(e) {
+
+        // Create a new arrow on stage press
+        //current = new createjs.Shape().set({x:stage.mouseX, y:stage.mouseY});
+        movementLine = new createjs.Shape();
+        movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
+        movementLine.graphics.moveTo(playerObject.x, playerObject.y);
+        //this shit helps a lot
+        stage.addChild(movementLine);
+
+        // Update the current arrow on move
+        var moveListener = stage.on("stagemousemove", function(e) {
+
+            // Determine the length between the start and end point using pythagoras
+            var w = stage.mouseX - movementLine.x;
+            var h = stage.mouseY - movementLine.y;
+
+            movementLine.graphics.clear();
+            movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
+            movementLine.graphics.moveTo(playerObject.x,playerObject.y);
+            movementLine.graphics.lineTo(stage.mouseX, stage.mouseY);
+            //var l = Math.sqrt(w*w+h*h);
+
+            // Draw the arrow.
+            // Math.sqrt on the amplitude and frequency make it scale as it gets larger
+            //drawArrow(current, l, Math.sqrt(l), Math.sqrt(l));
+
+            // Rotate to touch the mouse
+            movementLine.graphics.rotation = Math.atan2(h,w) * 180/Math.PI;
+            stage.update();
+        });
+
+        // Stop the drag
+        var upListener = stage.on("stagemouseup", function() {
+            stage.off("stagemousemove", moveListener);
+            stage.off("stagemouseup", upListener);
+            movementLine = null;
+        });
+    });
+
+    //ticker old
+/*    var current = null;
+    stage.on("stagemousedown", function (event) {
+        movementLine.graphics.clear().ss(3).s("#000").mt(0,0);
+
+        current = new createjs.Shape().set({x:stage.mouseX, y:stage.mouseY});
+        stage.addChild(current);
+
+        var moveListener = stage.on("stagemousemove", function(e) {
+            // Determine the length between the start and end point using pythagoras
+            var w = stage.mouseX - current.x;
+            var h = stage.mouseY - current.y;
+            var l = Math.sqrt(w*w+h*h);
+
+            // Draw the arrow.
+            // Math.sqrt on the amplitude and frequency make it scale as it gets larger
+            drawArrow(current, l, Math.sqrt(l), Math.sqrt(l));
+
+            // Rotate to touch the mouse
+            current.rotation = Math.atan2(h,w) * 180/Math.PI;
+            stage.update();
+            /!*        console.log("lol");
+             var cmd = movementLine.graphics.lineTo(playerObject.x,playerObject.y).command;
+             createjs.Tween.get(cmd, {loop:true}).to({x:event.stageX, y:event.stageY}, 1);*!/
+        });
+    });
+
+
+    playerObject.on("pressmove", function(event) {
+        return;
+        //movementLine.graphics.lineTo(event.stageX, event.stageY);
+        var cmd = movementLine.graphics.lineTo(playerObject.x,playerObject.y).command;
+
+        createjs.Tween.get(cmd, {loop:true}).to({x:event.stageX, y:event.stageY}, 2000);
+        /!* Sets playerobject to mouse position
+        event.target.x = event.stageX;
+        event.target.y = event.stageY;*!/
+    });
+    stage.on("pressup", function(event) { console.log("up"); });
     //obstacles move here
+
+
     if(alive){
         //moveObstacles();
     }else{
         endGame();
     }
-    stage.update();
+    stage.update();*/
 }
 /**
  * Ends the somehow
@@ -110,15 +252,6 @@ function addLine(){
 }
 
 /**
- * Draws the line from the given input
- */
-function drawLine() {
-    line.graphics.lineTo(lines[lines.length - 1][0], lines[lines.length - 1][1]);
-    stage.update();
-    console.log("adding further lines, draw");
-}
-
-/**
  * Creates the asteroids
  */
 function createObstacles(){
@@ -131,7 +264,7 @@ function createObstacles(){
         obstacle.name = "obst_" + i;
         obstacles.push(obstacle);
         stage.addChild(obstacle);
-        console.log(stage.getChildAt(i));
+        //console.log(stage.getChildAt(i));
     }
 }
 /**
@@ -197,5 +330,7 @@ function handleDestination() {
     stage.update();
     currentTargetNumber += 1;*/
 }
+
+
 
 window.addEventListener("loaded", init, false);
