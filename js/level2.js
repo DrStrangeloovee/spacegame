@@ -21,6 +21,7 @@ var moving = false;
 
 var shipContainer = new createjs.Container();
 var obstacleContainer = new createjs.Container();
+var lineContainer = new createjs.Container();
 
 
 //line which is drawn when ship is moved
@@ -77,11 +78,10 @@ function tick(e) {
         movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
         movementLine.graphics.moveTo(playerObject.x, playerObject.y);
         //this shit helps a lot
-        stage.addChild(movementLine);
+        lineContainer.addChild(movementLine);
 
         // Update the current arrow on move
         var moveListener = stage.on("stagemousemove", function(e) {
-
             // Determine the length between the start and end point using pythagoras
             var w = stage.mouseX - movementLine.x;
             var h = stage.mouseY - movementLine.y;
@@ -97,7 +97,7 @@ function tick(e) {
             //drawArrow(current, l, Math.sqrt(l), Math.sqrt(l));
 
             // Rotate to touch the mouse, i dont know why but setting the playerObjet rotation the same with the movementLine makes the whole thing more smooth
-            movementLine.graphics.rotation = playerObject.Bitmap.rotation = Math.atan2(h,w) * 180/Math.PI;
+            movementLine.graphics.rotation = playerObject.rotation = Math.atan2(h,w) * 180/Math.PI;
             stage.update();
         });
 
@@ -120,7 +120,6 @@ function tick(e) {
 
 function createPlayerObject() {
     playerObject = new createjs.Bitmap(playerImage);
-    //playerObject.graphics.setStrokeStyle(1).beginStroke("red").beginFill("red").drawCircle(0, 0, 15);
     playerObject.x = 0;
     playerObject.y = 0;
     playerObject.regX = playerImage.width/2;
@@ -205,7 +204,7 @@ function startGame() {
     createPlayerObject();
     createObstacles();
 
-    stage.addChild(shipContainer, obstacleContainer);
+    stage.addChild(shipContainer, obstacleContainer, lineContainer);
     stage.update();
 }
 
