@@ -69,7 +69,8 @@ function init() {
  */
 function tick(e) {
     var movementLine = null;
-    playerObject.on("pressmove", function(e) {
+    //mousemovement stuff
+    /*playerObject.on("pressmove", function(e) {
         moving = true;
 
         // Create a new arrow on stage press
@@ -107,9 +108,9 @@ function tick(e) {
             stage.off("stagemouseup", upListener);
             movementLine = null;
         });
-    });
+    });*/
 
-    //move the obstacles
+    //move the obstacles while player is alive
     if(alive && !moving){
         moveObstacles();
     }else{
@@ -130,7 +131,7 @@ function createPlayerObject() {
 }
 
 /**
- * Ends the somehow
+ * Ends the in someway which is currently not implemented
  * @returns {boolean}
  */
 function endGame() {
