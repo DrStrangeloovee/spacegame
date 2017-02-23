@@ -16,6 +16,13 @@ var stage,
     playerImage;
 
 
+//keycodes for arrow-buttons on keyboard
+var KEYCODE_LEFT = 37,
+    KEYCODE_RIGHT = 39,
+    KEYCODE_UP = 38,
+    KEYCODE_DOWN = 40;
+
+
 //if mouse is moving over stage, to pause the obstacle movement
 var moving = false;
 
@@ -54,6 +61,9 @@ function init() {
     playerImage.src = "assets/spaceship.png";
     playerImage.onload = handleImageLoad;
 
+    this.document.onkeydown = keyPressed;
+
+
     function handleImageLoad(e) {
         createPlayerObject();
     }
@@ -64,8 +74,41 @@ function init() {
     startGame();
 }
 
+
+function keyPressed(event) {
+    movementLine = new createjs.Shape();
+    movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
+    movementLine.graphics.moveTo(playerObject.x, playerObject.y);
+    lineContainer.addChild(movementLine);
+
+    moving = true;
+
+    switch(event.keyCode) {
+        case KEYCODE_LEFT:
+            movementLine.graphics.lineTo(playerObject.x - 10, playerObject.y);
+            console.log("left");
+            break;
+        case KEYCODE_RIGHT:
+            movementLine.graphics.lineTo(playerObject.x + 10, playerObject.y);
+            console.log("right");
+            break;
+        case KEYCODE_UP:
+            movementLine.graphics.lineTo(playerObject.x, playerObject.y + 10);
+            console.log("up");
+            break;
+        case KEYCODE_DOWN:
+            movementLine.graphics.lineTo(playerObject.x, playerObject.y - 10);
+            console.log("down");
+            break;
+    }
+
+    stage.update();
+}
+
+
 /**
  * handles the tick
+ * the user interaction with the keyboard gets also handled here
  */
 function tick(e) {
     var movementLine = null;
@@ -110,13 +153,15 @@ function tick(e) {
         });
     });*/
 
+
+
     //move the obstacles while player is alive
-    if(alive && !moving){
-        moveObstacles();
-    }else{
-        alive = false;
-        endGame();
-    }
+    // if(alive && !moving){
+    //     moveObstacles();
+    // }else{
+    //     alive = false;
+    //     endGame();
+    // }
 }
 
 function createPlayerObject() {
