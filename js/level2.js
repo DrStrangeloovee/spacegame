@@ -110,8 +110,18 @@ function keyPressed(event) {
  * handles the tick
  * the user interaction with the keyboard gets also handled here
  */
-function tick(e) {
-    var movementLine = null;
+function tick(event) {
+    movementLine = new createjs.Shape();
+    movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
+    movementLine.graphics.moveTo(playerObject.x, playerObject.y);
+    lineContainer.addChild(movementLine);
+
+    for(var i = 0; i < 10; i++){
+        movementLine.graphics.lineTo(playerObject.x + i*50, playerObject.y + i*50);
+    }
+
+
+    movementLine.clear();
     //mousemovement stuff
     /*playerObject.on("pressmove", function(e) {
         moving = true;
@@ -182,28 +192,6 @@ function createPlayerObject() {
 function endGame() {
     console.log("dead");
     return false;
-}
-
-/**
- * Adds a new line to the planned routes and stores it as array in lines
- */
-function addLine(){
-    var x = parseInt(document.getElementById("x").value);
-    var y = parseInt(document.getElementById("y").value);
-
-    if(x > stageWidth || x < 0 || y > stageHeight || y < 0){
-        console.log("out of space, try again");
-    }else if(lines.length < 1){
-        targetX = x;
-        targetY = y;
-        lines.push([x, y]);
-        drawLine();
-        console.log(lines);
-    }else{
-        lines.push([x, y]);
-        drawLine();
-        console.log(lines);
-    }
 }
 
 /**
