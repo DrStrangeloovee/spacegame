@@ -102,7 +102,7 @@ function tick(event) {
 
     stage.on("mouseover", function () {
             console.log("over");
-        });
+    });
     stage.update();
 }
 

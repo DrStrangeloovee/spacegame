@@ -63,6 +63,7 @@ function init() {
 
     this.document.onkeydown = keyPressed;
 
+    stage.addEventListener("click", moousePressed(event));
 
     function handleImageLoad(e) {
         createPlayerObject();
@@ -75,7 +76,7 @@ function init() {
 }
 
 
-function keyPressed(event) {
+/*function keyPressed(event) {
     movementLine = new createjs.Shape();
     movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
     movementLine.graphics.moveTo(playerObject.x, playerObject.y);
@@ -103,6 +104,13 @@ function keyPressed(event) {
     }
 
     stage.update();
+}*/
+
+/**
+ * sets new dot
+ */
+function mousePressed(){
+    console.log("press");
 }
 
 
@@ -111,6 +119,8 @@ function keyPressed(event) {
  * the user interaction with the keyboard gets also handled here
  */
 function tick(event) {
+
+
     movementLine = new createjs.Shape();
     movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
     movementLine.graphics.moveTo(playerObject.x, playerObject.y);
@@ -263,16 +273,16 @@ function handleDestination() {
 
 
     //old stuff
-/*    console.log("tween completed");
-    playerObjectX = playerObject.x;
-    playerObjectY = playerObject.y;
-    targetX = lines[currentTargetNumber][0];
-    targetY = lines[currentTargetNumber][1];
+    /*    console.log("tween completed");
+     playerObjectX = playerObject.x;
+     playerObjectY = playerObject.y;
+     targetX = lines[currentTargetNumber][0];
+     targetY = lines[currentTargetNumber][1];
 
-    console.log(playerObjectX);
-    console.log(playerObjectY);
-    stage.update();
-    currentTargetNumber += 1;*/
+     console.log(playerObjectX);
+     console.log(playerObjectY);
+     stage.update();
+     currentTargetNumber += 1;*/
 }
 
 
