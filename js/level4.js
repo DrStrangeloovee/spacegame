@@ -14,6 +14,7 @@ function init() {
 
     stage.enableMouseOver(10);
 
+
     obstacleContainer = stage.addChild(new createjs.Container()).set({name: "obstacleContainer"});
     playerContainer = stage.addChild(new createjs.Container()).set({name: "playerContainer"});
     /*
@@ -42,7 +43,7 @@ function handleImageLoad(event) {
 }
 
 /**
- * places playerobject to top left corner and loads image
+ * places playerObject to top left corner and loads image
  */
 function createPlayerObject() {
     playerObject = new createjs.Bitmap(playerImage);
@@ -66,14 +67,12 @@ function handleMouseClick(event){
     stage.addChild(navigationPoint);
     navigationPointSet = true;
 
-
-    //TODO: TWEEN rotation of this shit
+    //calculates degrees for rotation of playerObject, starts tween for rotation and
     var rads = Math.atan2(stage.mouseY - playerObject.y, stage.mouseX - playerObject.x);
-
     var angle = rads * (180 / Math.PI);
     console.log("angle: "+ angle);
-    playerObject.rotation = angle;
-    createjs.Tween.get(playerObject, { loop: false }).to({rotation: rads}, 1000, createjs.Ease.getPowInOut(4));
+    //playerObject.rotation = angle;
+    createjs.Tween.get(playerObject, { loop: false }).to({rotation: angle}, 500, createjs.Ease.getPowInOut(2));
     fly(navigationPoint.x, navigationPoint.y);
 }
 
@@ -93,9 +92,15 @@ function tick(event) {
         }
     });
 
-/*    playerContainer.on("stagemousemove", function (event) {
+    playerContainer.on("stagemousemove", function (event) {
+/*       var rads = Math.atan2(stage.mouseY - playerObject.y, stage.mouseX - playerObject.x);
 
-    });*/
+         var angle = rads * (180 / Math.PI);
+         console.log("angle: "+ angle);
+         playerObject.rotation = angle;
+         createjs.Tween.get(playerObject, { loop: false }).to({rotation: angle}, 1000, createjs.Ease.getPowInOut(4));
+         fly(navigationPoint.x, navigationPoint.y);*/
+    });
 
     stage.update();
 }
@@ -114,7 +119,7 @@ function fly(targetX, targetY) {
 /**
  * After the tween animation is finished you can do here some stuff, for now it only updates the playerObject coordinates to the new ones
  */
-function handleDestination() {
+function handleDestination(event) {
     navigationPointSet = false;
     stage.removeChild(navigationPoint);
     console.log("reached destination");
