@@ -9,6 +9,10 @@ var obstacles = [];
 //stores tweens for every obstacle
 var obstacleTweens = [];
 var obstacleCount = 15;
+//distance which player travelled aka points
+var distanceTravelled = 0;
+//how many times player has clicked
+var amountFlights = 0;
 
 function init() {
     stage = new createjs.Stage("stage");
@@ -141,12 +145,13 @@ function tick(event) {
         var pt = child.globalToLocal(playerObject.x, playerObject.y);
         if (child.hitTest(pt.x, pt.y)) {
             console.log("hit");
+            endGame();
         }
     }
 
     stage.update();
 
-        //old stuff
+//old stuff
 /*
     while(isFlying){
         console.log("currently flying and checking for collision");
@@ -176,6 +181,23 @@ function tick(event) {
 
 
 }
+/**
+ * ends the game if player hits obstacle and restarts it(somewhat)
+ */
+function endGame() {
+    console.log("game over");
+    //gameover text
+
+}
+
+/**
+ * when player reaches end he wins the game and displays distance travelled
+ */
+function winGame(){
+    console.log("win");
+    //winning text
+
+}
 
 /**
  * animations for moving the rocket from dot to dot
@@ -186,14 +208,26 @@ function fly(targetX, targetY) {
     for(var i = 0; i<obstacleTweens.length; i++){
         //wtf createjs, cannot access tween inside array and need to pull it out first???????
         var currentTween = obstacleTweens[i];
-        console.log(obstacleTweens[i]);
         currentTween.setPaused(false);
     }
 
     isFlying = true;
     console.log("lets fly");
 
-    createjs.Tween.get(playerObject, { loop: false }).to({ x: targetX , y: targetY}, 1000, createjs.Ease.getPowInOut(4)).call(handleDestination);
+    createjs.Tween.get(playerObject, { loop: false }).to({ x: targetX , y: targetY}, 2500, createjs.Ease.getPowInOut(4)).call(handleDestination);
+
+    //calculate distance for points
+    console.log("target: " + targetY);
+    console.log("playerob: " + playerObject.y);
+    var xDistance = parseInt(playerObject.x)+ parseInt(targetX);
+    console.log("xdist: " + xDistance);
+
+    var yDistance = parseInt(playerObject.y) + parseInt(targetY);
+    console.log("ydist: " + yDistance);
+
+    var distance = Math.floor(Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+
+    distanceTravelled += distance;
     //eventlistener on tween end, just chain to the line before -> .addEventListener("oncomplete", handleDestination);
 }
 
@@ -201,15 +235,21 @@ function fly(targetX, targetY) {
  * After the tween animation is finished you can do here some stuff, for now it only updates the playerObject coordinates to the new ones
  */
 function handleDestination(event) {
-
     //pauses tweens for obstacles
     for(var i = 0; i<obstacleTweens.length; i++){
         //wtf createjs, cannot access tween inside array and need to pull it out first???????
         var currentTween = obstacleTweens[i];
-        console.log(obstacleTweens[i]);
         currentTween.setPaused(true);
     }
 
+    //if player reached right end he wins the game
+    if(playerObject.x > 1000){
+        winGame();
+    }
+
+    amountFlights++;
+    console.log("amount flights: " + amountFlights);
+    console.log("distance travelled: " + distanceTravelled);
     isFlying = false;
     navigationPointSet = false;
     stage.removeChild(navigationPoint);
