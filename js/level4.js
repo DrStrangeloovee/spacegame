@@ -15,7 +15,7 @@ function init() {
     createjs.MotionGuidePlugin.install(createjs.Tween);
     createjs.Ticker.setFPS(60);
     createjs.Ticker.setInterval(30);
-    createjs.Ticker.addEventListener("tick", tick);
+    //createjs.Ticker.addEventListener("tick", tick);
 
     stage.enableMouseOver(10);
 
@@ -40,7 +40,7 @@ function init() {
     console.log("loaded");
     console.log("starting game...");
 
-
+    createjs.Ticker.on("tick", tick);
 }
 
 function createObstacles() {
@@ -134,8 +134,19 @@ function tick(event) {
     });
 
 
+    //hitcollision - fuck yessssss first try
+    var l = obstacleContainer.getNumChildren();
+    for (var i=0; i<l; i++) {
+        var child = obstacleContainer.getChildAt(i);
+        var pt = child.globalToLocal(playerObject.x, playerObject.y);
+        if (child.hitTest(pt.x, pt.y)) {
+            console.log("hit");
+        }
+    }
 
-    //hitcollision
+    stage.update();
+
+        //old stuff
 /*
     while(isFlying){
         console.log("currently flying and checking for collision");
@@ -146,7 +157,6 @@ function tick(event) {
 /*    stage.on("stagemousemove", function (event) {
             console.log("stagemousemove - movementarrow");
     });*/
-
 
 /*    var moveListener = stage.on("stagemousemove", function(event) {
         // Determine the length between the start and end point using pythagoras
@@ -164,7 +174,7 @@ function tick(event) {
         stage.update();
     });*/
 
-    stage.update();
+
 }
 
 /**
@@ -199,6 +209,7 @@ function handleDestination(event) {
         console.log(obstacleTweens[i]);
         currentTween.setPaused(true);
     }
+
     isFlying = false;
     navigationPointSet = false;
     stage.removeChild(navigationPoint);
