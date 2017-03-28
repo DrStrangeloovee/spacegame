@@ -63,7 +63,7 @@ function init() {
 
     this.document.onkeydown = keyPressed;
 
-    stage.addEventListener("click", moousePressed(event));
+    stage.addEventListener("click", mousePressed);
 
     function handleImageLoad(e) {
         createPlayerObject();
@@ -119,8 +119,6 @@ function mousePressed(){
  * the user interaction with the keyboard gets also handled here
  */
 function tick(event) {
-
-
     movementLine = new createjs.Shape();
     movementLine.graphics.setStrokeStyle(5).beginStroke("#ffffff");
     movementLine.graphics.moveTo(playerObject.x, playerObject.y);
@@ -160,7 +158,7 @@ function tick(event) {
             // Math.sqrt on the amplitude and frequency make it scale as it gets larger
             //drawArrow(current, l, Math.sqrt(l), Math.sqrt(l));
 
-            // Rotate to touch the mouse, i dont know why but setting the playerObjet rotation the same with the movementLine makes the whole thing more smooth
+            // Rotate to touch the mouse, i dont know why but setting the playerObject rotation the same with the movementLine makes the whole thing more smooth
             movementLine.graphics.rotation = playerObject.rotation = Math.atan2(h,w) * 180/Math.PI;
             stage.update();
         });
