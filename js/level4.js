@@ -3,16 +3,18 @@
  */
 var stage, obstacleContainer, playerContainer;
 var navigationPoint;
-var navigationPointSet = false;
-var isFlying = false;
-var obstacles = [];
+var navigationPointSet;
+var isFlying;
+var obstacles;
 //stores tweens for every obstacle
-var obstacleTweens = [];
-var obstacleCount = 15;
+var obstacleTweens;
+var obstacleCount;
 //distance which player travelled aka points
-var distanceTravelled = 0;
+var distanceTravelled;
 //how many times player has clicked
-var amountFlights = 0;
+var amountFlights;
+//playerstate
+var alive;
 
 function init() {
     stage = new createjs.Stage("stage");
@@ -23,17 +25,21 @@ function init() {
 
     stage.enableMouseOver(10);
 
+    //variable declaration
+    navigationPointSet = false;
+    isFlying = false;
+    obstacles = [];
+    obstacleTweens = [];
+    obstacleCount = 15;
+    distanceTravelled = 0;
+    amountFlights = 0;
+    alive = true;
 
     playerContainer = stage.addChild(new createjs.Container()).set({name: "playerContainer"});
     obstacleContainer = stage.addChild(new createjs.Container()).set({name: "obstacleContainer"});
 
     //places playerContainer over all other obstacles
     stage.setChildIndex( playerContainer, stage.getNumChildren()-1);
-    /*
-
-    container.addEventListener("click", mousePressed, true);
-*/
-
 
     playerImage = new Image();
     playerImage.src = "assets/spaceship.png";
@@ -121,9 +127,8 @@ function handleMouseClick(event){
     fly(navigationPoint.x, navigationPoint.y);
 }
 
-
 /**
- * handles tick actions
+ * handles tick actions and hit collision
  * @param event
  */
 function tick(event) {
@@ -132,7 +137,7 @@ function tick(event) {
      */
     stage.on("stagemousedown", function(event) {
         //checks first if there is currently one navigation point set, prevents spamming of clicks
-        if(!navigationPointSet){
+        if(!navigationPointSet && alive){
             handleMouseClick(event);
         }
     });
@@ -144,7 +149,8 @@ function tick(event) {
         var child = obstacleContainer.getChildAt(i);
         var pt = child.globalToLocal(playerObject.x, playerObject.y);
         if (child.hitTest(pt.x, pt.y)) {
-            console.log("hit");
+            //console.log("hit");
+            alive = false;
             endGame();
         }
     }
@@ -185,18 +191,72 @@ function tick(event) {
  * ends the game if player hits obstacle and restarts it(somewhat)
  */
 function endGame() {
-    console.log("game over");
+    //stop the whole game
+    //createjs.Ticker.paused = true;
     //gameover text
+    var text = new createjs.Text("Du verlierst!", "30px Arial", "#be0a00");
+    text.baseLine = "middle";
+    text.textAlign = "center";
+    text.x = stage.canvas.width/2;
+    text.y = stage.canvas.height/2;
+    text.outLine = 1;
 
+
+    var text2 = new createjs.Text("Klicke hier um neu zu starten!", "20px Arial", "#fff");
+    text2.baseLine = "middle";
+    text2.textAlign = "center";
+    text2.x = stage.canvas.width/2;
+    text2.y = text.y + 30;
+    text2.outLine = 1;
+
+    stage.on("stagemousedown", function(event) {
+        //console.log("click on text");
+        //restart game
+        init();
+    });
+
+
+    stage.addChild(text, text2);
+    stage.update();
 }
 
 /**
  * when player reaches end he wins the game and displays distance travelled
  */
 function winGame(){
-    console.log("win");
+    //stop the whole game
+    //createjs.Ticker.paused = true;
     //winning text
+    var text = new createjs.Text("Du gewinnst!", "30px Arial", "#10b346");
+    text.baseLine = "middle";
+    text.textAlign = "center";
+    text.x = stage.canvas.width/2;
+    text.y = stage.canvas.height/2;
+    text.outLine = 1;
 
+    var text2 = new createjs.Text("Deine Punkte:\n " + distanceTravelled, "20px Arial", "#fff");
+    text2.baseLine = "middle";
+    text2.textAlign = "center";
+    text2.x = stage.canvas.width/2;
+    text2.y = text.y + 30;
+    text2.outLine = 1;
+
+    var text3 = new createjs.Text("Klicke hier um neu zu starten!", "20px Arial", "#fff");
+    text3.baseLine = "middle";
+    text3.textAlign = "center";
+    text3.x = stage.canvas.width/2;
+    text3.y = text2.y + 30;
+    text3.outLine = 1;
+
+    stage.on("stagemousedown", function(event) {
+        //console.log("click on text");
+        //restart game
+        init();
+    });
+
+
+    stage.addChild(text, text2, text3);
+    stage.update();
 }
 
 /**
