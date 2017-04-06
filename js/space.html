@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Asteroid Game</title>
+
     <script src="easel.js"></script>
+    <link href="style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <script>
         var canvas;
         var stage;
         var bg;
-
+        var score;
         var bmpList;
         var bitmap;
         var txt;
@@ -20,7 +22,7 @@
         function init() {
             canvas = document.getElementById("canvas");
             stage = new Stage(canvas);
-
+            score=0;
 
             canvas.onmousedown = onMouseDown;
             canvas.onmouseup = onMouseUp;
@@ -39,7 +41,7 @@
             stage.addChild(bgrnd);
             stage.update();
         }
-        //Createt die Ships
+        //Erstellt die Schiffe
         function createShips(event){
             var image = event.target;
             var container = new Container();
@@ -47,24 +49,26 @@
             var l = 5;
             bmpList=[];
             for (var i=0; i<l; i++){
-                bitmap = new Bitmap(image);
+                var bitmap = new Bitmap(image);
                 container.addChild(bitmap);
                 bitmap.name="ship"+i;
                 resetEnemy(bitmap);
-                bitmap.regX = bitmap.image.width/2|0;
-                bitmap.regY = bitmap.image.height/2|0;
+                bitmap.X = bitmap.image.width/2|0;
+                bitmap.Y = bitmap.image.height/2|0;
                 bitmap.mouseEnabled = true;
                 bmpList.push(bitmap);
             }
-            txt = new Text ("Score: 0", "24px Arial", "#FFF");
-            txt.textBaseline="top";
-            txt.x = 800;
-            txt.y = 20;
+            txt=new Text("Score: 0", "24px Arial", "#FFF");
+            txt.TextBaseline="top";
+            txt.x=800;
+            txt.y=20;
             stage.addChild(txt);
             play=true;
-
+            stage.update();
             Ticker.addListener(window);
         }
+
+
         //"Resettet" die Enemies(die ships)
         function resetEnemy(ship){
             ship.x = canvas.width + Math.random()*500;
@@ -81,7 +85,7 @@
                 tempText = tempText.substring(0,4);
                 if (tempText!=null && tempText=="ship"){
                     resetEnemy(mouseTarget);
-
+                    score+=50;
                     clicked=false;
                 }
             }
@@ -94,37 +98,47 @@
                         bmp.x -= bmp.speed;
                     }else{
                         gameOver();
-                        //console.log("game over");
-                    }
+
+                      }
                 }
             }
-
+            txt.text="Score: "+score;
             stage.update();
         }
 
         function gameOver(){
 
-            gameTxt = new Text("Game Over\n\n", "36px Arial", "#FFF");
+             popup = new Shape();
+             popup.graphics.beginFill("rgba(0,0,0,0)");
+             popup.graphics.drawRect(0,0,960,580);
+
+             text = new Text("Game Over!! \n F5 drücken um von vorne zu beginnen","24px Arial", "#000000");
+             text.x = 960/2 ;
+             text.y = 580/2;
+             stage.addChild(text);
+
+            /*gameTxt = new Text("Game Over\n\n", "36px Arial", "#FFF");
             gameTxt.text += "Click to play again";
             gameTxt.textAlign = "center";
             gameTxt.x = canvas.width /2;
             gameTxt.y = canvas.height/3;
-            stage.addChild(gameTxt);
+            stage.addChild(gameTxt);*/
             play=false;
             var l=bmpList.length;
             for(var i=0; i<l; i++){
                 var bmp = bmpList[i];
                 resetEnemy(bmp);
             }
+            stage.addChild(popup);
             stage.update();
-            console.log("Game Over, click to play again!");
             canvas.onclick = handleClick;
         }
+
+
         function handleClick(){
             canvas.onclick=null;
             stage.removeChild(gameTxt);
-
-
+            score=0;
             play=true;
         }
 
@@ -136,13 +150,17 @@
             clicked = false
         }
 
+
+
     </script>
 </head>
 
 <body onload="init();">
 <p>
     <canvas id="canvas" width="960" height="580"></canvas>
+
 </p>
+
 
 </body>
 </html>
